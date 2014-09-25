@@ -139,7 +139,7 @@ YaBoss.prototype.searchAds = function(query, options, callback){
  * @description
  * Issue a call to web search api
  */
-YaBoss.prototype.getGeoSearch = function(query, options, callback){
+YaBoss.prototype.placeFinder = function(query, options, callback){
   if(callback === undefined){
     callback = options;
     options = {count: 10};
@@ -147,6 +147,16 @@ YaBoss.prototype.getGeoSearch = function(query, options, callback){
 
   var geoSearchUrl = 'https://yboss.yahooapis.com/geo/placefinder',
     finalUrl = geoSearchUrl +'?'+ qs.stringify(internals.extend({q: query}, options));
+
+  var oa = new OAuth.OAuth(geoSearchUrl, finalUrl , this.consumerKey, this.consumerSecret, "1.0", null, "HMAC-SHA1");
+  oa.setClientOptions({ requestTokenHttpMethod: 'GET' });
+  oa.getProtectedResource(finalUrl, "GET", '','', callback);
+};
+
+YaBoss.prototype.placeSpotter = function(options, callback){
+
+  var geoSearchUrl = 'https://yboss.yahooapis.com/geo/placespotter',
+    finalUrl = geoSearchUrl +'?'+ qs.stringify(options);
 
   var oa = new OAuth.OAuth(geoSearchUrl, finalUrl , this.consumerKey, this.consumerSecret, "1.0", null, "HMAC-SHA1");
   oa.setClientOptions({ requestTokenHttpMethod: 'GET' });
